@@ -33,6 +33,7 @@ public class RecipeRestController {
 
     @PostMapping("/new")
     public Recipe addNew(@RequestBody Recipe recipe) {
+        System.out.println(recipe);
         return recipeService.createRecipe(recipe);
     }
 
