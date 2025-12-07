@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import um.feri.si.ris_backend.model.Recipe;
+import um.feri.si.ris_backend.repository.RecipeRatingRepository;
 import um.feri.si.ris_backend.service.RecipeService;
 
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.List;
 public class RecipeRestController {
 
     private final RecipeService recipeService;
+    private final RecipeRatingRepository recipeRatingRepository;
 
     @Autowired
-    public RecipeRestController(RecipeService recipeService) {
+    public RecipeRestController(RecipeService recipeService,  RecipeRatingRepository recipeRatingRepository) {
         this.recipeService = recipeService;
+        this.recipeRatingRepository = recipeRatingRepository;
     }
 
     @GetMapping("/all")
@@ -51,6 +54,16 @@ public class RecipeRestController {
     @GetMapping("/category/{category}")
     public List<Recipe> getRecipesByCategory(@PathVariable String category) {
         return recipeService.getByCategory(category);
+    }
+
+    @PostMapping("/{id}/rating")
+    public Double rateRecipe(@PathVariable Long id, @RequestParam Double rating) {
+        return recipeService.addRating(id, rating);
+    }
+
+    @GetMapping("/{id}/rating")
+    public Double getRating(@PathVariable Long id) {
+        return recipeService.getRating(id);
     }
 
 }

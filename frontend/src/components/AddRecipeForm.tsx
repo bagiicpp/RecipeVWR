@@ -9,6 +9,7 @@ type RecipeType = {
   description: string;
   category: string;
   date_of_creation: string;
+  rating: string;
 };
 
 type AddRecipeFormType = {

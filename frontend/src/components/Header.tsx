@@ -14,6 +14,7 @@ type RecipeType = {
   description: string;
   category: string;
   date_of_creation: string;
+  rating: number;
 };
 
 type HeaderType = {
@@ -42,7 +43,7 @@ const Header: React.FC<HeaderType> = ({ setRecipes }) => {
         <NavLink to={"login"}>Login</NavLink>
         <CategoryToggle setRecipes={setRecipes} />
         <div className="flex items-center space-x-1 group hover:text-[#F5CB5C] cursor-pointer transition-all duration-100 ease-in">
-          {localStorage.getItem("user") && (
+          {localStorage.getItem("username") && (
             <>
               <PlusIcon
                 onClick={() => setFormVisible(!formVisible)}
@@ -53,7 +54,7 @@ const Header: React.FC<HeaderType> = ({ setRecipes }) => {
               </p>
             </>
           )}
-          {!localStorage.getItem("user") && (
+          {!localStorage.getItem("username") && (
             <>
               <NavLink to="register">REGISTER</NavLink>
               {/* <PlusIcon className="w-6 self-center" />

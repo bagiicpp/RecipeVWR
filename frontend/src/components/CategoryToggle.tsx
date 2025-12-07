@@ -12,6 +12,7 @@ type RecipeType = {
   description: string;
   category: string;
   date_of_creation: string;
+  rating: string;
 };
 
 const CategoryToggle: React.FC<HeaderType> = ({ setRecipes }) => {

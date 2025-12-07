@@ -8,6 +8,7 @@ type RecipeType = {
   description: string;
   category: string;
   date_of_creation: string;
+  rating: number;
 };
 
 function App() {

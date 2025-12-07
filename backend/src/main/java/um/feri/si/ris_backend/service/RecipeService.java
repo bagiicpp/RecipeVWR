@@ -2,6 +2,8 @@ package um.feri.si.ris_backend.service;
 
 import org.springframework.stereotype.Service;
 import um.feri.si.ris_backend.model.Recipe;
+import um.feri.si.ris_backend.model.RecipeRating;
+import um.feri.si.ris_backend.repository.RecipeRatingRepository;
 import um.feri.si.ris_backend.repository.RecipeRepository;
 
 import java.util.List;
@@ -10,9 +12,11 @@ import java.util.List;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeRatingRepository recipeRatingRepository;
 
-    public RecipeService(RecipeRepository recipeRepository) {
+    public RecipeService(RecipeRepository recipeRepository,  RecipeRatingRepository recipeRatingRepository) {
         this.recipeRepository = recipeRepository;
+        this.recipeRatingRepository = recipeRatingRepository;
     }
 
     public List<Recipe> getByCategory(String category) {
@@ -33,6 +37,30 @@ public class RecipeService {
 
     public Recipe updateRecipe(Recipe recipe) {
         return recipeRepository.save(recipe);
+    }
+
+    public Double addRating(Long recipeId, Double rating) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+
+        RecipeRating newRating = new RecipeRating();
+        newRating.setRecipe(recipe);
+        newRating.setRating(rating);
+        recipeRatingRepository.save(newRating);
+
+        List<RecipeRating> ratings = recipeRatingRepository.findByRecipeId(recipeId);
+        double avg = ratings.stream().mapToDouble(RecipeRating::getRating).average().orElse(0.0);
+
+        recipe.setRating(avg);
+        recipeRepository.save(recipe);
+
+        return avg;
+    }
+
+    public Double getRating(Long recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+        return recipe.getRating();
     }
 
     public void deleteRecipe(Long id) {
