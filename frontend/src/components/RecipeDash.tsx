@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { useEffect } from 'react';
-import RecipeCard from './RecipeCard';
+import axios from "axios";
+import { useEffect } from "react";
+import RecipeCard from "./RecipeCard";
 
 type RecipeType = {
   id: number;
@@ -18,10 +18,11 @@ type recipeDashType = {
 const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
   useEffect(() => {
     axios
-      .get('http://localhost:8080/recipe/all')
+      .get("http://localhost:8080/recipe/all")
       .then((res) => {
         setRecipes(res.data);
         setRecipes(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.error(err);

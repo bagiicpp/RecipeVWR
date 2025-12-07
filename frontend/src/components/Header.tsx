@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import AddRecipeForm from './AddRecipeForm';
-import { PlusIcon } from '@heroicons/react/16/solid';
-import CategoryToggle from './CategoryToggle';
+import { useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import AddRecipeForm from "./AddRecipeForm";
+import { PlusIcon } from "@heroicons/react/16/solid";
+import CategoryToggle from "./CategoryToggle";
+import { NavLink } from "react-router";
 
 gsap.registerPlugin(useGSAP);
 
@@ -25,9 +26,9 @@ const Header: React.FC<HeaderType> = ({ setRecipes }) => {
   useGSAP(() => {
     if (formVisible) {
       gsap.fromTo(
-        '.add-recipe-form',
+        ".add-recipe-form",
         { opacity: 0 },
-        { opacity: 1, duration: 0.4, ease: 'power2.out' }
+        { opacity: 1, duration: 0.4, ease: "power2.out" }
       );
     }
   }, [formVisible]);
@@ -38,15 +39,29 @@ const Header: React.FC<HeaderType> = ({ setRecipes }) => {
         <p className="text-2xl font-bold text-text-base hover:text-[#F5CB5C]">
           RecipeVwr
         </p>
+        <NavLink to={"login"}>Login</NavLink>
         <CategoryToggle setRecipes={setRecipes} />
-        <div
-          onClick={() => setFormVisible(!formVisible)}
-          className="flex items-center space-x-1 group hover:text-[#F5CB5C] cursor-pointer transition-all duration-100 ease-in"
-        >
-          <PlusIcon className="w-6 self-center" />
-          <p className="text-text-base text-xl group-hover:text-[#F5CB5C] transition-all duration-100 ease-in">
-            New Recipe
-          </p>
+        <div className="flex items-center space-x-1 group hover:text-[#F5CB5C] cursor-pointer transition-all duration-100 ease-in">
+          {localStorage.getItem("user") && (
+            <>
+              <PlusIcon
+                onClick={() => setFormVisible(!formVisible)}
+                className="w-6 self-center"
+              />
+              <p className="text-text-base text-xl group-hover:text-[#F5CB5C] transition-all duration-100 ease-in">
+                New Recipe
+              </p>
+            </>
+          )}
+          {!localStorage.getItem("user") && (
+            <>
+              <NavLink to="register">REGISTER</NavLink>
+              {/* <PlusIcon className="w-6 self-center" />
+              <p className="text-text-base text-xl group-hover:text-[#F5CB5C] transition-all duration-100 ease-in">
+                Sign in
+              </p> */}
+            </>
+          )}
         </div>
         {formVisible && (
           <AddRecipeForm

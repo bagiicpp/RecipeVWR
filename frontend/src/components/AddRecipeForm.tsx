@@ -1,7 +1,7 @@
-import { XCircleIcon } from '@heroicons/react/16/solid';
-import { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'sonner';
+import { XCircleIcon } from "@heroicons/react/16/solid";
+import { useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 
 type RecipeType = {
   id: number;
@@ -29,21 +29,28 @@ const AddRecipeForm: React.FC<AddRecipeFormType> = ({
   setRecipes,
 }) => {
   const [formData, setFormData] = useState<formDataType>({
-    name: '',
-    description: '',
-    category: 'Breakfast',
+    name: "",
+    description: "",
+    category: "Breakfast",
   });
-
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         console.log(formData);
+        if (!formData.name.trim()) {
+          toast.error("Recipe name is required");
+          return;
+        }
 
+        if (!formData.category) {
+          toast.error("Recipe category is required");
+          return;
+        }
         toast.promise(
           axios
-            .post('http://localhost:8080/recipe/new', {
+            .post("http://localhost:8080/recipe/new", {
               name: formData.name,
               description: formData.description,
               category: formData.category,
@@ -52,15 +59,15 @@ const AddRecipeForm: React.FC<AddRecipeFormType> = ({
               const newRecipe: RecipeType = res.data;
               setRecipes((prev) => [...prev, newRecipe]);
               setFormVisible(false);
-              setFormData({ name: '', description: '', category: '' });
+              setFormData({ name: "", description: "", category: "Breakfast" });
             })
             .catch((err) => {
               console.error(err);
             }),
           {
-            loading: 'Adding new recipe...',
-            success: 'Successfully added new recipe',
-            error: 'An error occured while adding recipe',
+            loading: "Adding new recipe...",
+            success: "Successfully added new recipe",
+            error: "An error occured while adding recipe",
           }
         );
       }}
