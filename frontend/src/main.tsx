@@ -6,6 +6,7 @@ import App from "./App.tsx";
 import { Toaster } from "sonner";
 import Register from "./pages/Register.tsx";
 import Login from "./pages/Login.tsx";
+import RecipeDetailsCard from "./components/RecipeDetailsCard.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -13,6 +14,7 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/recipe/:id" element={<RecipeDetailsCard />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>

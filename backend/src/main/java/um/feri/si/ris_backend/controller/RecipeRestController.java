@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recipe")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class RecipeRestController {
 
     private final RecipeService recipeService;

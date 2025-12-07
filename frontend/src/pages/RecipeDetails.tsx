@@ -1,9 +1,9 @@
-import RecipeDetails from "../components/RecipeDetails";
+import RecipeDetailsCard from "../components/RecipeDetailsCard";
 
 const Details = () => {
   return (
     <div>
-      <RecipeDetails />
+      <RecipeDetailsCard />
     </div>
   );
 };

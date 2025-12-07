@@ -1,8 +1,9 @@
-import { TrashIcon, PencilIcon } from '@heroicons/react/16/solid';
+import { TrashIcon, PencilIcon, EyeIcon } from '@heroicons/react/16/solid';
 import axios from 'axios';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import EditRecipeForm from './EditRecipeForm';
+import { NavLink } from "react-router-dom";
 
 type RecipeType = {
   id: number;
@@ -44,6 +45,14 @@ const RecipeCard: React.FC<RecipeCardType> = ({
         <div className="flex justify-between items-center space-x-3">
           <p>{date_of_creation}</p>
           <div className="flex space-x-3">
+            <NavLink to={`/recipe/${id}`}>
+              <EyeIcon
+                className="w-8 bg-blk-10 p-1 border border-border rounded 
+                          hover:text-[#F5CB5C] hover:shadow-[0_0_10px_rgba(245,203,92,0.2)] 
+                          shadow cursor-pointer duration-200 ease-in-out"
+              />
+            </NavLink>
+
             <PencilIcon
               onClick={() => {
                 setEditRecipeForm(!editRecipeForm);
