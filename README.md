@@ -218,7 +218,7 @@ tailwindcss: ^4.1.14
 
 Prosimo, da koda sledi smernicam projekta in vključuje teste, kjer je to smiselno.
 
-#📘 1. Pregled podrobnosti recepta
+# 1. Pregled podrobnosti recepta
 
 Opis funkcionalnosti
 Dodana je nova stran /recipe/:id, kjer si uporabnik lahko ogleda vse podrobnosti recepta, vključno z nazivom, opisom, kategorijo, datumom nastanka, ocenami in komentarji.
@@ -233,7 +233,7 @@ V seznamu receptov klikni ikono Eye.
 Odpre se stran:
 http://localhost:5173/recipe/ID
 
-#⭐ 2. Ocenjevanje receptov
+# 2. Ocenjevanje receptov
 
 Opis funkcionalnosti
 Uporabnik lahko odda oceno receptu (od 1 do 5). Sistem izračuna povprečno oceno in jo prikaže na strani podrobnosti.
@@ -248,7 +248,7 @@ Klikni Rate Recipe.
 Izberi oceno 1–5.
 Povprečna ocena se posodobi v realnem času.
 
-#💬 3. Komentarji na recept
+# 3. Komentarji na recept
 
 Opis funkcionalnosti
 Uporabniki lahko dodajajo komentarje z besedilom in datumom. Komentarji se prikažejo pod receptom.
@@ -263,7 +263,7 @@ Pomakni se do sekcije Comments.
 Vnesi komentar in potrdi.
 Komentar se prikaže takoj v seznamu.
 
-#🔐 4. Prijava in registracija uporabnikov
+# 4. Prijava in registracija uporabnikov
 
 Opis funkcionalnosti
 Uporabnik lahko ustvari račun in se prijavi. Prijavljen uporabnik pridobi dostop do dodatnih funkcionalnosti (npr. ocenjevanje, komentiranje, urejanje lastnih receptov).
