@@ -53,7 +53,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           <h2 className="text-xl text-text-muted ">{category}</h2>
           <h2 className="text-xl text-text-muted">
             Current Average:{" "}
-            {currentRating !== undefined ? currentRating.toFixed(1) : "0.0"}
+            {currentRating !== undefined ? currentRating : "0.0"}
           </h2>
 
           <p className="text-text-muted">{description}</p>
