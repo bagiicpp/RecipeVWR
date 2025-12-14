@@ -149,6 +149,8 @@ tailwindcss: ^4.1.14
 │                       └── si
 │                           └── ris_backend
 │                               └── RisBackendApplicationTests.java
+                                └── RecipeCategoryTest.java
+
 └── ris-frontend
     ├── bun.lock
     ├── eslint.config.js
