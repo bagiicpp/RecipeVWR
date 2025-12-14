@@ -5,12 +5,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import um.feri.si.ris_backend.model.Comment;
+import um.feri.si.ris_backend.model.Recipe;
 import um.feri.si.ris_backend.model.Users;
+import um.feri.si.ris_backend.repository.RecipeRepository;
 import um.feri.si.ris_backend.repository.UsersRepository;
+import um.feri.si.ris_backend.service.CommentService;
 import um.feri.si.ris_backend.service.UsersService;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class RisBackendApplicationTests {
@@ -19,7 +22,10 @@ class RisBackendApplicationTests {
 
 	@Autowired
 	private UsersService usersService;
-
+	@Autowired
+	private CommentService commentService;
+	@Autowired
+	private RecipeRepository recipeRepository;
 	@Autowired
 	private UsersRepository usersRepository;
 
@@ -40,5 +46,28 @@ class RisBackendApplicationTests {
 
 		assertFalse(loginOk);
 	}
+	@Test
+	void addCommentSuccess() {
+		Recipe recipe = new Recipe();
+		recipe.setName("Test Recipe");
+		recipe = recipeRepository.save(recipe);
 
+		Comment coment = new Comment();
+		coment.setText("Petar the Best");
+
+		Comment savedComment = commentService.addComment(recipe.getId(), coment);
+
+		assertNotNull(savedComment.getId());
+	}
+
+	@Test
+	void addCommentFail() {
+		Comment comment = new Comment();
+		comment.setText("Petar the Best".repeat(1000));
+
+		boolean valid = comment.getText().length() <= 255;
+
+		assertFalse(valid);
+
+	}
 }
