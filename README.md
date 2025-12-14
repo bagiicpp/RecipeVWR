@@ -217,3 +217,67 @@ tailwindcss: ^4.1.14
 6. Odpri pull request  
 
 Prosimo, da koda sledi smernicam projekta in vključuje teste, kjer je to smiselno.
+
+# 1. Pregled podrobnosti recepta
+
+Opis funkcionalnosti
+Dodana je nova stran /recipe/:id, kjer si uporabnik lahko ogleda vse podrobnosti recepta, vključno z nazivom, opisom, kategorijo, datumom nastanka, ocenami in komentarji.
+Na kartici recepta je dodana tudi ikona Eye, ki omogoča takojšen dostop do podrobnosti.
+
+Kako deluje
+Ob kliku na gumb See Details ali na ikono Eye aplikacija preko React Routerja odpre novo stran in iz backend API-ja pridobi podatke o receptu.
+
+Kako preizkusiti
+Zaženi frontend (npm run dev).
+V seznamu receptov klikni ikono Eye.
+Odpre se stran:
+http://localhost:5173/recipe/ID
+
+# 2. Ocenjevanje receptov
+
+Opis funkcionalnosti
+Uporabnik lahko odda oceno receptu (od 1 do 5). Sistem izračuna povprečno oceno in jo prikaže na strani podrobnosti.
+Kako deluje
+Ocena se pošlje backendu preko POST zahteve.
+Backend shrani oceno in posodobi povprečje.
+Povprečna ocena je prikazana v uporabniškem vmesniku.
+
+Kako preizkusiti
+Odpri podrobnosti recepta.
+Klikni Rate Recipe.
+Izberi oceno 1–5.
+Povprečna ocena se posodobi v realnem času.
+
+# 3. Komentarji na recept
+
+Opis funkcionalnosti
+Uporabniki lahko dodajajo komentarje z besedilom in datumom. Komentarji se prikažejo pod receptom.
+
+Kako deluje
+Komentar se shrani v bazo kot del recepta.
+Vmesnik osveži seznam komentarjev in jih prikaže kronološko.
+
+Kako preizkusiti
+Odpri podrobnosti recepta.
+Pomakni se do sekcije Comments.
+Vnesi komentar in potrdi.
+Komentar se prikaže takoj v seznamu.
+
+# 4. Prijava in registracija uporabnikov
+
+Opis funkcionalnosti
+Uporabnik lahko ustvari račun in se prijavi. Prijavljen uporabnik pridobi dostop do dodatnih funkcionalnosti (npr. ocenjevanje, komentiranje, urejanje lastnih receptov).
+
+Kako deluje
+Registracija ustvari novega uporabnika v bazi.
+Prijava shrani uporabniško ime v localStorage.
+Aplikacija prepozna prijavljenega uporabnika in mu omogoči dodatne akcije.
+
+Kako preizkusiti
+Registracija:
+http://localhost:5173/register
+Prijava:
+http://localhost:5173/login
+Po prijavi lahko uporabnik ocenjuje, komentira in ureja svoje recepte.
+
+
