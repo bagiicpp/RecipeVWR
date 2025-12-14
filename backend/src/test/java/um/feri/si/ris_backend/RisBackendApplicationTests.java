@@ -18,16 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class RisBackendApplicationTests {
 
-	private Users testUser;
-
 	@Autowired
 	private UsersService usersService;
 	@Autowired
 	private CommentService commentService;
 	@Autowired
 	private RecipeRepository recipeRepository;
-	@Autowired
-	private UsersRepository usersRepository;
 
 	@Test
 	void loginSuccess() {
@@ -46,16 +42,21 @@ class RisBackendApplicationTests {
 
 		assertFalse(loginOk);
 	}
+
 	@Test
 	void addCommentSuccess() {
 		Recipe recipe = new Recipe();
 		recipe.setName("Test Recipe");
+		recipe.setDescription("Test description");
+		recipe.setCategory("Breakfast");
+		recipe.setRating(5.0);
+
 		recipe = recipeRepository.save(recipe);
 
-		Comment coment = new Comment();
-		coment.setText("Petar the Best");
+		Comment comment = new Comment();
+		comment.setText("Petar the Best");
 
-		Comment savedComment = commentService.addComment(recipe.getId(), coment);
+		Comment savedComment = commentService.addComment(recipe.getId(), comment);
 
 		assertNotNull(savedComment.getId());
 	}

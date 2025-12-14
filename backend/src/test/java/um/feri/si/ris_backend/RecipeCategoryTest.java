@@ -26,6 +26,7 @@ class RecipeCategoryTest {
     @Test
     void saveRecipeWithValidCategory_success() {
         recipe.setCategory("Dinner");
+        recipe.setDescription("Very delicious recipe");
         Recipe savedRecipe = recipeRepository.save(recipe);
 
         assertNotNull(savedRecipe.getId(), "Recipe ID should not be null after saving");
@@ -33,7 +34,7 @@ class RecipeCategoryTest {
     }
 
 
-     //NEGATIVE TEST
+        //NEGATIVE TEST
     @Test
     void saveRecipeWithEmptyCategory_fail() {
         recipe.setCategory("");
