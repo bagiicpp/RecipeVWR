@@ -8,6 +8,7 @@ type formDataType = {
   username: string;
   email: string;
   password: string;
+  taste: string;
 };
 
 const RegisterForm = () => {
@@ -17,6 +18,7 @@ const RegisterForm = () => {
     username: "",
     email: "",
     password: "",
+    taste: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,6 +41,7 @@ const RegisterForm = () => {
             username: "",
             email: "",
             password: "",
+            taste: ""
           });
         })
         .catch((err) => {
@@ -123,6 +126,27 @@ const RegisterForm = () => {
           placeholder="Enter password"
           className="w-full px-3 py-2 rounded bg-blk-10 border border-border transition-all duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-[#808080]"
         />
+      </div>
+
+      <div>
+        <label className="block mb-2 font-medium">Favorite taste</label>
+
+        <select
+          value={formData.taste}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, taste: e.target.value }))
+          }
+          className="w-full px-3 py-2 rounded bg-blk-10 border border-border 
+                    transition-all duration-200 ease-in-out
+                    focus:outline-none focus:ring-1 focus:ring-[#808080]"
+        >
+          <option value="">Select your taste</option>
+          <option value="ITALIAN">Italian</option>
+          <option value="VEGETARIAN">Vegetarian</option>
+          <option value="CHINESE">Chinese</option>
+          <option value="SWEET">Sweet</option>
+          <option value="HEALTHY">Healthy</option>
+        </select>
       </div>
 
       <button
