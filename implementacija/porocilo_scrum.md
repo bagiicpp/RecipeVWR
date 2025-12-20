@@ -31,7 +31,7 @@ Trajanje naloge smo ocenili z metodo **Planning Poker**.
 
 Naloga je bila zaključena hitreje od ocenjenega časa, saj je bila omejena na pripravo osnovnih podatkovnih struktur brez dodatne poslovne logike.
 
-## Naloga: Priprava REST endpointa za dnevne predloge
+### Naloga: Priprava REST endpointa za dnevne predloge
 
 V okviru te naloge sem izvedel naslednje korake:
 
@@ -42,7 +42,7 @@ V okviru te naloge sem izvedel naslednje korake:
 - implementiral sem REST endpoint za **pridobivanje receptov glede na okus**, ki omogoča filtriranje receptov,
 - spremembe so bile izvedene brez večjih posegov v obstoječo arhitekturo, kar omogoča nadaljnjo nadgradnjo funkcionalnosti v naslednjih sprintih.
 
-## Ocena trajanja naloge (Planning Poker)
+### Ocena trajanja naloge (Planning Poker)
 
 Trajanje naloge smo ocenili z metodo **Planning Poker**.
 
@@ -63,4 +63,5 @@ Napredek naloge je bil spremljan preko agilne Scrum table v GitHub Projects. Nal
 To Do → Doing → Done
 
 Vsaka sprememba je bila sproti dokumentirana.
+
 
