@@ -21,15 +21,13 @@ public class UsersRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> body) {
+    public Users login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
 
-        if (usersService.findByUsername(username).isPresent()) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(401).body("User not found");
-        }
+        return usersService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
 
     @GetMapping
     public ResponseEntity<List<Users>> getAllUsers() {

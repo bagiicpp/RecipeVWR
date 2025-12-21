@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect } from "react";
 import RecipeCard from "./RecipeCard";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 type RecipeType = {
   id: number;
@@ -18,6 +20,8 @@ type recipeDashType = {
 };
 
 const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     console.log("Fetching recipes...");
     axios
@@ -37,6 +41,23 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
         setRecipes([]);
       });
   }, [setRecipes]);
+
+  useEffect(() => {
+    const taste = localStorage.getItem("taste");
+    if (!taste || recipes.length === 0) return;
+
+    const filtered = recipes.filter((r) => r.taste === taste);
+    if (!filtered.length) return;
+
+    const randomRecipe = filtered[Math.floor(Math.random() * filtered.length)];
+
+    toast(`Recommended for you: ${randomRecipe.name}`, {
+      action: {
+        label: "View Recipe",
+        onClick: () => navigate(`/recipe/${randomRecipe.id}`),
+      },
+    });
+  }, [recipes, navigate]);
 
   return (
     <div>
