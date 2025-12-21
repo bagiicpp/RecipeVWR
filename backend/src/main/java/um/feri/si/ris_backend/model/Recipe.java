@@ -21,6 +21,7 @@ public class Recipe {
     private LocalDate date_of_creation = LocalDate.now();
     private String category;
     private Double rating;
+    private String taste;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("recipe")

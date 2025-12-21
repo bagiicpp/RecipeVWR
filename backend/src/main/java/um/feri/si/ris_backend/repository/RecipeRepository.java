@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> getRecipesByCategory(String category);
+    List<Recipe> getRecipesByTaste(String taste);
 }

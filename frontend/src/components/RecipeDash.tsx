@@ -9,6 +9,7 @@ type RecipeType = {
   category: string;
   date_of_creation: string;
   rating: number;
+  taste: string;
 };
 
 type recipeDashType = {
@@ -37,8 +38,6 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
       });
   }, [setRecipes]);
 
-  console.log("Current recipes state:", recipes);
-
   return (
     <div>
       <div className="grid grid-cols-5 container mx-auto gap-10 p-10">
@@ -57,6 +56,7 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
               rating={recipe.rating}
               date_of_creation={recipe.date_of_creation}
               setRecipes={setRecipes}
+              taste={recipe.taste}
             />
           ))
         )}

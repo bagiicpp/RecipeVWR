@@ -56,6 +56,11 @@ public class RecipeRestController {
         return recipeService.getByCategory(category);
     }
 
+    @GetMapping("/taste")
+    public List<Recipe> getRecipesByTaste(@RequestParam String taste) {
+        return recipeService.getByTaste(taste);
+    }
+
     @PostMapping("/{id}/rating")
     public Double rateRecipe(@PathVariable Long id, @RequestParam Double rating) {
         return recipeService.addRating(id, rating);

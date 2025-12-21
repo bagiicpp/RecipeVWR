@@ -23,6 +23,10 @@ public class RecipeService {
         return recipeRepository.getRecipesByCategory(category);
     }
 
+    public List<Recipe> getByTaste(String taste) {
+        return recipeRepository.getRecipesByTaste(taste);
+    }
+
     public List<Recipe> getAllRecipes() {
         return recipeRepository.findAll();
     }
