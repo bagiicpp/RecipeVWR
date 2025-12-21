@@ -51,17 +51,24 @@ Trajanje naloge smo ocenili z metodo **Planning Poker**.
 
 Naloga je bila zaključena hitreje od ocenjenega časa, saj je šlo predvsem za razširitev obstoječih podatkovnih struktur ter manjše prilagoditve frontend obrazca in REST vmesnika brez dodatne kompleksne poslovne logike.
 
----
+### Naloga: Frontend prikaz dnevnih prdlaganih receptov
 
-# DODAJTE TUKA ZA VASITE OPIS IZVADENE NALOGE
+V okviru te naloge sem izvedel naslednje korake:
+
+-pregledal sem obstoječo frontend strukturo za prikaz receptov v komponenti RecipeDash,
+-dodal sem interaktivni toast ob uspešno dodanem receptu, ki uporabnika ob kliku vodi na podrobnosti recepta,
+-poskrbel sem, da se recepti, ki so trenutno v bazi, dinamično prikažejo v mreži (grid) s pomočjo komponente RecipeCard,
+-omogočil sem filtriranje receptov po okusu (taste) s spustnim seznamom, ki po izbiri osveži prikaz receptov,
+-vključil sem posamezne useEffect hook-e za ločeno upravljanje z fetchanjem receptov in prikazom toastov,
+-spremembe so bile izvedene tako, da ohranjajo obstoječo arhitekturo in omogočajo nadaljnjo nadgradnjo, npr. dodajanje novih filtrov ali integracijo z dnevnim predlogom.
+
+### Ocena trajanja naloge (Planning Poker)
+
+- **Ocenjen čas:** 45 minut
+- **Dejanski čas izvedbe:** približno 25 minut
+
+Naloga je bila zaključena nekoliko hitreje, saj je šlo predvsem za prilagoditev obstoječih komponent in dodajanje toast funkcionalnosti, brez kompleksnih sprememb backend logike.
 
 
-## Spremljanje napredka (Scrum tabla)
-
-Napredek naloge je bil spremljan preko agilne Scrum table v GitHub Projects. Naloga je bila premaknjena skozi naslednje faze:
-
-To Do → Doing → Done
-
-Vsaka sprememba je bila sproti dokumentirana.
 
 
