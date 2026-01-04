@@ -26,7 +26,9 @@ const LoginForm = () => {
       axios
         .post("http://localhost:8080/users/login", formData)
         .then((res) => {
-          localStorage.setItem("username", formData.username);
+          const user = res.data;
+          localStorage.setItem("username", user.username);
+          localStorage.setItem("taste", user.taste);
           navigate("/");
           setFormData({ username: "", password: "" });
         })

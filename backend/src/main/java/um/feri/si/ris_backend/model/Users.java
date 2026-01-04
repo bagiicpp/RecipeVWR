@@ -17,5 +17,4 @@ public class Users {
     private String email;
     private String password;
     private String taste;
-
 }

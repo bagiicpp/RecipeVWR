@@ -13,6 +13,7 @@ type RecipeType = {
   category: string;
   date_of_creation: string;
   rating: number;
+  taste: string;
 };
 
 type RecipeCardType = {
@@ -22,6 +23,7 @@ type RecipeCardType = {
   category: string;
   date_of_creation: string;
   rating: number;
+  taste: string;
   setRecipes: React.Dispatch<React.SetStateAction<RecipeType[]>>;
 };
 
@@ -32,6 +34,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   category,
   date_of_creation,
   rating,
+  taste,
   setRecipes,
 }) => {
   const [editRecipeForm, setEditRecipeForm] = useState(false);
@@ -57,6 +60,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           </h2>
 
           <p className="text-text-muted">{description}</p>
+          <p className="text-text-muted">{taste}</p>
         </div>
 
         <RecipeRate
@@ -110,6 +114,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           description={description}
           category={category}
           date_of_creation={date_of_creation}
+          taste={taste}
           setRecipes={setRecipes}
           setEditRecipeForm={setEditRecipeForm}
         />

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect } from "react";
 import RecipeCard from "./RecipeCard";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 type RecipeType = {
   id: number;
@@ -9,6 +11,7 @@ type RecipeType = {
   category: string;
   date_of_creation: string;
   rating: number;
+  taste: string;
 };
 
 type recipeDashType = {
@@ -17,6 +20,8 @@ type recipeDashType = {
 };
 
 const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     console.log("Fetching recipes...");
     axios
@@ -37,7 +42,22 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
       });
   }, [setRecipes]);
 
-  console.log("Current recipes state:", recipes);
+  useEffect(() => {
+    const taste = localStorage.getItem("taste");
+    if (!taste || recipes.length === 0) return;
+
+    const filtered = recipes.filter((r) => r.taste === taste);
+    if (!filtered.length) return;
+
+    const randomRecipe = filtered[Math.floor(Math.random() * filtered.length)];
+
+    toast(`Recommended for you: ${randomRecipe.name}`, {
+      action: {
+        label: "View Recipe",
+        onClick: () => navigate(`/recipe/${randomRecipe.id}`),
+      },
+    });
+  }, [recipes, navigate]);
 
   return (
     <div>
@@ -57,6 +77,7 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
               rating={recipe.rating}
               date_of_creation={recipe.date_of_creation}
               setRecipes={setRecipes}
+              taste={recipe.taste}
             />
           ))
         )}

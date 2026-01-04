@@ -24,7 +24,6 @@ const RegisterForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
     if (!formData.name.trim()) return toast.error("Name is required");
     if (!formData.surname.trim()) return toast.error("Surname is required");
     if (!formData.username.trim()) return toast.error("Username is required");
@@ -141,11 +140,11 @@ const RegisterForm = () => {
                     focus:outline-none focus:ring-1 focus:ring-[#808080]"
         >
           <option value="">Select your taste</option>
-          <option value="ITALIAN">Italian</option>
-          <option value="VEGETARIAN">Vegetarian</option>
-          <option value="CHINESE">Chinese</option>
-          <option value="SWEET">Sweet</option>
-          <option value="HEALTHY">Healthy</option>
+          <option value="Italian">Italian</option>
+          <option value="Vegetarian">Vegetarian</option>
+          <option value="Chinese">Chinese</option>
+          <option value="Sweet">Sweet</option>
+          <option value="Healthy">Healthy</option>
         </select>
       </div>
 
