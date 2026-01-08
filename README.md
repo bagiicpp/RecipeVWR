@@ -282,4 +282,7 @@ Prijava:
 http://localhost:5173/login
 Po prijavi lahko uporabnik ocenjuje, komentira in ureja svoje recepte.
 
+Kanban WIP limits:
+- To Do: max 5 items
+- In Progress: max 3 items
 
