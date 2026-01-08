@@ -1,5 +1,6 @@
 package um.feri.si.ris_backend.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import um.feri.si.ris_backend.model.Recipe;
 import um.feri.si.ris_backend.model.RecipeRating;
@@ -35,11 +36,24 @@ public class RecipeService {
         return recipeRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe with id " + id + " not found!"));
     }
 
+    @Transactional
     public Recipe createRecipe(Recipe recipe) {
+        if (recipe.getIngredients() != null) {
+            recipe.getIngredients().forEach(ri -> {
+                ri.setRecipe(recipe);
+                if (ri.getId() != null && recipe.getId() != null) {
+                    ri.getId().setRecipeId(recipe.getId());
+                }
+            });
+        }
         return recipeRepository.save(recipe);
     }
 
+    @Transactional
     public Recipe updateRecipe(Recipe recipe) {
+        if (recipe.getIngredients() != null) {
+            recipe.getIngredients().forEach(ri -> ri.setRecipe(recipe));
+        }
         return recipeRepository.save(recipe);
     }
 
