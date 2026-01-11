@@ -47,7 +47,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   setRecipes,
 }) => {
   const [editRecipeForm, setEditRecipeForm] = useState(false);
-  const [addIngredientForm, setAddIngredientForm] = useState(false); // New state
+  const [addIngredientForm, setAddIngredientForm] = useState(false); 
   const [currentRating, setCurrentRating] = useState(
     rating ? Number(rating) : 0,
   );
@@ -55,6 +55,29 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   useEffect(() => {
     setCurrentRating(rating);
   }, [rating]);
+
+  const handleEatenMeal = () => {
+    const calories =
+      (ingredients || []).reduce(
+        (sum, ri) =>
+          sum +
+          ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) / 100,
+        0,
+      );
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    const stored = JSON.parse(
+      localStorage.getItem("dailyCalories") || "{}",
+    );
+
+    stored[today] = (stored[today] || 0) + calories;
+
+    localStorage.setItem("dailyCalories", JSON.stringify(stored));
+
+    toast.success(`Meal added (+${calories.toFixed(0)} kcal)`);
+  };
+
 
   return (
     <>
@@ -96,7 +119,15 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           <p className="text-sm text-text-muted">{date_of_creation}</p>
 
           <div className="flex space-x-2">
-            {/* New Button for Adding Ingredients */}
+            <div
+              title="Mark as eaten"
+              onClick={handleEatenMeal}
+              className="px-3 h-8 bg-green-600 text-black flex items-center justify-center 
+                        rounded font-bold hover:bg-green-500 cursor-pointer transition"
+            >
+              Ate
+            </div>
+
             <div
               title="Add Ingredient"
               onClick={() => setAddIngredientForm(true)}

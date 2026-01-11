@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -12,13 +12,24 @@ type RecipeType = {
   date_of_creation: string;
   rating: number;
   taste: string;
-  ingredients?: { ingredient: { calories100g: number }; quantity: number }[]; // 👈 DODAJ OVU LINIJU
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[]; 
 };
 
 type recipeDashType = {
   recipes: RecipeType[];
   setRecipes: React.Dispatch<React.SetStateAction<RecipeType[]>>;
 };
+
+const [dailyCalories, setDailyCalories] = useState<number>(0);
+
+useEffect(() => {
+  const today = new Date().toISOString().slice(0, 10);
+  const stored = JSON.parse(
+    localStorage.getItem("dailyCalories") || "{}",
+  );
+
+  setDailyCalories(stored[today] || 0);
+}, []);
 
 const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
   const navigate = useNavigate();
@@ -83,6 +94,13 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
           ))
         )}
       </div>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-blk-5 border border-border px-8 py-4 rounded-xl shadow-lg text-center z-50">
+        <p className="text-sm text-text-muted">Today's intake</p>
+        <p className="text-3xl font-bold text-[#F5CB5C]">
+          {dailyCalories.toFixed(0)} kcal
+        </p>
+      </div>
+
     </div>
   );
 };
