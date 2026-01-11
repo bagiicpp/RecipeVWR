@@ -3,6 +3,9 @@ package um.feri.si.ris_backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 @Data
 @Table(name = "ingredient")
 @Entity

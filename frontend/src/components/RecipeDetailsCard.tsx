@@ -67,7 +67,7 @@ const RecipeDetails = () => {
         loading: "Adding comment...",
         success: "Successfully added comment",
         error: "An error occurred",
-      }
+      },
     );
   };
 
@@ -89,7 +89,43 @@ const RecipeDetails = () => {
       <p className="text-lg text-gray-300 leading-relaxed">
         {recipe.description}
       </p>
-
+      <div className="space-y-4 pt-4">
+        <h2 className="text-2xl font-semibold text-[#F5CB5C]">Ingredients</h2>
+        {recipe.ingredients && recipe.ingredients.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {recipe.ingredients.map((ri, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center p-3 bg-blk-10 border border-border rounded-md hover:border-[#F5CB5C]/50 transition-colors"
+              >
+                <div>
+                  <span className="font-bold text-text-base">
+                    {ri.ingredient.name}
+                  </span>
+                  <p className="text-xs text-gray-400">
+                    {ri.ingredient.calories100g} kcal per 100g
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-[#F5CB5C] font-mono font-bold">
+                    {ri.quantity}g
+                  </span>
+                  <p className="text-[10px] text-gray-500 uppercase">
+                    {((ri.ingredient.calories100g * ri.quantity) / 100).toFixed(
+                      0,
+                    )}{" "}
+                    kcal total
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-400 italic text-sm">
+            No ingredients listed for this recipe yet.
+          </p>
+        )}
+      </div>
       <hr className="border-gray-600" />
 
       <div className="space-y-4">

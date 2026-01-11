@@ -1,10 +1,16 @@
-import { TrashIcon, PencilIcon, EyeIcon } from "@heroicons/react/16/solid";
+import {
+  TrashIcon,
+  PencilIcon,
+  EyeIcon,
+  PlusIcon,
+} from "@heroicons/react/16/solid";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import EditRecipeForm from "./EditRecipeForm";
 import { NavLink } from "react-router-dom";
 import RecipeRate from "./RecipeRate";
+import AddCustomIngredientForm from "./AddCustomIngredientForm";
 
 type RecipeType = {
   id: number;
@@ -41,8 +47,9 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   setRecipes,
 }) => {
   const [editRecipeForm, setEditRecipeForm] = useState(false);
+  const [addIngredientForm, setAddIngredientForm] = useState(false); // New state
   const [currentRating, setCurrentRating] = useState(
-    rating ? Number(rating) : 0
+    rating ? Number(rating) : 0,
   );
 
   useEffect(() => {
@@ -51,7 +58,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
 
   return (
     <>
-      <div className="rounded-md p-4 bg-blk-5 border border-border flex flex-col space-y-4 justify-between hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] shadow duration-200 ease-in-out">
+      <div className="rounded-md p-4 bg-blk-5 border border-border flex flex-col space-y-4 justify-between hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] shadow duration-200 ease-in-out relative">
         <div className="flex flex-col">
           <h1 className="text-2xl text-text-base font-bold text-center mb-4">
             {name}
@@ -68,8 +75,8 @@ const RecipeCard: React.FC<RecipeCardType> = ({
                 (sum, ri) =>
                   sum +
                   ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) /
-                    100,
-                0
+                  100,
+                0,
               )
               .toFixed(1)}{" "}
             kcal
@@ -85,28 +92,45 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           setRecipes={setRecipes}
         />
 
-        <div className="flex justify-between items-center space-x-3">
-          <p>{date_of_creation}</p>
-          <div className="flex space-x-3">
+        <div className="flex justify-between items-center space-x-3 pt-2 border-t border-blk-10">
+          <p className="text-sm text-text-muted">{date_of_creation}</p>
+
+          <div className="flex space-x-2">
+            {/* New Button for Adding Ingredients */}
+            <div
+              title="Add Ingredient"
+              onClick={() => setAddIngredientForm(true)}
+              className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-green-400 hover:shadow-[0_0_10px_rgba(74,222,128,0.2)] shadow cursor-pointer duration-200 ease-in-out"
+            >
+              <PlusIcon className="w-5" />
+            </div>
+
             <NavLink to={`/recipe/${id}`}>
-              <EyeIcon
-                className="w-8 bg-blk-10 p-1 border border-border rounded 
-                          hover:text-[#F5CB5C] hover:shadow-[0_0_10px_rgba(245,203,92,0.2)] 
-                          shadow cursor-pointer duration-200 ease-in-out"
-              />
+              <div
+                title="View Details"
+                className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-[#F5CB5C] hover:shadow-[0_0_10px_rgba(245,203,92,0.2)] shadow cursor-pointer duration-200 ease-in-out"
+              >
+                <EyeIcon className="w-5" />
+              </div>
             </NavLink>
-            <PencilIcon
+
+            <div
+              title="Edit Recipe"
               onClick={() => setEditRecipeForm(!editRecipeForm)}
-              className="w-8 bg-blk-10 p-1 border border-border rounded hover:text-[#F5CB5C] hover:shadow-[0_0_10px_rgba(245,203,92,0.2)] shadow cursor-pointer duration-200 ease-in-out"
-            />
-            <TrashIcon
+              className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-[#F5CB5C] hover:shadow-[0_0_10px_rgba(245,203,92,0.2)] shadow cursor-pointer duration-200 ease-in-out"
+            >
+              <PencilIcon className="w-5" />
+            </div>
+
+            <div
+              title="Delete Recipe"
               onClick={() => {
                 toast.promise(
                   axios
                     .delete(`http://localhost:8080/recipe/${id}`)
                     .then(() => {
                       setRecipes((prevRecipes) =>
-                        prevRecipes.filter((recipe) => recipe.id !== id)
+                        prevRecipes.filter((recipe) => recipe.id !== id),
                       );
                     })
                     .catch((err) => console.error(err)),
@@ -114,14 +138,18 @@ const RecipeCard: React.FC<RecipeCardType> = ({
                     loading: `Deleting ${name}...`,
                     success: `Successfully deleted ${name}`,
                     error: `An error occured while deleting ${name}`,
-                  }
+                  },
                 );
               }}
-              className="w-8 bg-blk-10 p-1 border border-border rounded hover:text-red-400 hover:shadow-[0_0_10px_rgba(255,100,103,0.2)] cursor-pointer duration-200 ease-in-out"
-            />
+              className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-red-400 hover:shadow-[0_0_10px_rgba(255,100,103,0.2)] cursor-pointer duration-200 ease-in-out"
+            >
+              <TrashIcon className="w-5" />
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Render Edit Form */}
       {editRecipeForm && (
         <EditRecipeForm
           id={id}
@@ -133,6 +161,16 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           ingredients={ingredients}
           setRecipes={setRecipes}
           setEditRecipeForm={setEditRecipeForm}
+        />
+      )}
+
+      {/* Render Add Ingredient Form */}
+      {addIngredientForm && (
+        <AddCustomIngredientForm
+          recipeId={id}
+          recipeName={name}
+          setFormVisible={setAddIngredientForm}
+          setRecipes={setRecipes}
         />
       )}
     </>
