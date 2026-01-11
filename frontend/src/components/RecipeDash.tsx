@@ -12,6 +12,7 @@ type RecipeType = {
   date_of_creation: string;
   rating: number;
   taste: string;
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[]; // 👈 DODAJ OVU LINIJU
 };
 
 type recipeDashType = {

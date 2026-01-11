@@ -24,4 +24,11 @@ public class RecipeIngredient {
     private Ingredient ingredient;
 
     private Double quantity;
+
+    public Double calculateCalories() {
+        if (ingredient == null || ingredient.getCalories100g() == null || quantity == null) {
+            return 0.0;
+        }
+        return (ingredient.getCalories100g() * quantity) / 100.0;
+    }
 }

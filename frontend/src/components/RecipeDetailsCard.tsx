@@ -10,6 +10,10 @@ type Recipe = {
   category: string;
   date_of_creation: string;
   rating: string;
+  ingredients?: {
+    ingredient: { name: string; calories100g: number };
+    quantity: number;
+  }[];
 };
 
 type Comment = {
@@ -63,7 +67,7 @@ const RecipeDetails = () => {
         loading: "Adding comment...",
         success: "Successfully added comment",
         error: "An error occurred",
-      },
+      }
     );
   };
 

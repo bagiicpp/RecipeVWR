@@ -14,6 +14,7 @@ type RecipeType = {
   date_of_creation: string;
   rating: number;
   taste: string;
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
 };
 
 type RecipeCardType = {
@@ -24,6 +25,7 @@ type RecipeCardType = {
   date_of_creation: string;
   rating: number;
   taste: string;
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
   setRecipes: React.Dispatch<React.SetStateAction<RecipeType[]>>;
 };
 
@@ -35,11 +37,12 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   date_of_creation,
   rating,
   taste,
+  ingredients,
   setRecipes,
 }) => {
   const [editRecipeForm, setEditRecipeForm] = useState(false);
   const [currentRating, setCurrentRating] = useState(
-    rating ? Number(rating) : 0,
+    rating ? Number(rating) : 0
   );
 
   useEffect(() => {
@@ -58,7 +61,19 @@ const RecipeCard: React.FC<RecipeCardType> = ({
             Current Average:{" "}
             {currentRating !== undefined ? currentRating : "0.0"}
           </h2>
-
+          <h2 className="text-xl text-text-muted font-bold text-[#F5CB5C]">
+            Calories:{" "}
+            {(ingredients || [])
+              .reduce(
+                (sum, ri) =>
+                  sum +
+                  ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) /
+                    100,
+                0
+              )
+              .toFixed(1)}{" "}
+            kcal
+          </h2>
           <p className="text-text-muted">{description}</p>
           <p className="text-text-muted">{taste}</p>
         </div>
@@ -91,7 +106,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
                     .delete(`http://localhost:8080/recipe/${id}`)
                     .then(() => {
                       setRecipes((prevRecipes) =>
-                        prevRecipes.filter((recipe) => recipe.id !== id),
+                        prevRecipes.filter((recipe) => recipe.id !== id)
                       );
                     })
                     .catch((err) => console.error(err)),
@@ -99,7 +114,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
                     loading: `Deleting ${name}...`,
                     success: `Successfully deleted ${name}`,
                     error: `An error occured while deleting ${name}`,
-                  },
+                  }
                 );
               }}
               className="w-8 bg-blk-10 p-1 border border-border rounded hover:text-red-400 hover:shadow-[0_0_10px_rgba(255,100,103,0.2)] cursor-pointer duration-200 ease-in-out"
@@ -115,6 +130,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           category={category}
           date_of_creation={date_of_creation}
           taste={taste}
+          ingredients={ingredients}
           setRecipes={setRecipes}
           setEditRecipeForm={setEditRecipeForm}
         />

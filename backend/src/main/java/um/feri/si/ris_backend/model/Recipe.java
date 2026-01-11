@@ -34,4 +34,14 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("recipe")
     private List<RecipeIngredient> ingredients;
+
+    public Double calculateTotalCalories() {
+        if (ingredients == null || ingredients.isEmpty()) {
+            return 0.0;
+        }
+
+        return ingredients.stream()
+                .mapToDouble(RecipeIngredient::calculateCalories)
+                .sum();
+    }
 }
