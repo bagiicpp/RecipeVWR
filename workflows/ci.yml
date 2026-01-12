@@ -21,8 +21,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
-          java-version: '20'
+          distribution: 'temurin'
+          java-version: '21'
           cache: maven
 
       - name: Build with Maven
@@ -60,9 +60,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_DB: risRecepti
+          POSTGRES_DB: jdbc:postgresql://localhost:5432/risRecepti
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: B@to2005!Jovana
         ports:
 		■  5432:5432
         options: >-
