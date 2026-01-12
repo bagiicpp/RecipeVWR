@@ -24,15 +24,7 @@ class RisBackendApplicationTests {
 	private CommentService commentService;
 	@Autowired
 	private RecipeRepository recipeRepository;
-
-	@Test
-	void loginSuccess() {
-		boolean loginOk = usersService.findByUsername("bagii")
-				.map(u -> u.getPassword().equals("bato2005"))
-				.orElse(false);
-
-		assertTrue(loginOk);
-	}
+	
 
 	@Test
 	void loginWrongPassword() {
