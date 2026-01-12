@@ -1,7 +1,7 @@
-import { XCircleIcon } from "@heroicons/react/16/solid";
-import { useState } from "react";
-import axios from "axios";
-import { toast } from "sonner";
+import { XCircleIcon } from '@heroicons/react/16/solid';
+import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 type AddIngredientFormProps = {
   recipeId: number;
@@ -17,11 +17,11 @@ const AddIngredientForm: React.FC<AddIngredientFormProps> = ({
   setRecipes,
 }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    quantity: "",
-    calories_100g: "",
-    protein_100g: "0",
-    fat_100g: "0",
+    name: '',
+    quantity: '',
+    calories_100g: '',
+    protein_100g: '0',
+    fat_100g: '0',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,7 +29,7 @@ const AddIngredientForm: React.FC<AddIngredientFormProps> = ({
 
     // Basic Validation
     if (!formData.name || !formData.quantity || !formData.calories_100g) {
-      toast.error("Please fill in Name, Quantity, and Calories");
+      toast.error('Please fill in Name, Quantity, and Calories');
       return;
     }
 
@@ -45,9 +45,8 @@ const AddIngredientForm: React.FC<AddIngredientFormProps> = ({
 
     toast.promise(
       axios
-        .post("http://localhost:8080/ingredient/add-to-recipe", payload)
-        .then((res) => {
-          // Update local state so the Recipe Card calories update without a refresh
+        .post('http://localhost:8080/ingredient/add-to-recipe', payload)
+        .then(() => {
           setRecipes((prev) =>
             prev.map((r) => {
               if (r.id === recipeId) {
@@ -63,15 +62,15 @@ const AddIngredientForm: React.FC<AddIngredientFormProps> = ({
                 };
               }
               return r;
-            }),
+            })
           );
           setFormVisible(false);
         }),
       {
-        loading: "Saving ingredient...",
+        loading: 'Saving ingredient...',
         success: `Added ${formData.name} to ${recipeName}`,
-        error: "Failed to save ingredient",
-      },
+        error: 'Failed to save ingredient',
+      }
     );
   };
 

@@ -3,14 +3,14 @@ import {
   PencilIcon,
   EyeIcon,
   PlusIcon,
-} from "@heroicons/react/16/solid";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
-import EditRecipeForm from "./EditRecipeForm";
-import { NavLink } from "react-router-dom";
-import RecipeRate from "./RecipeRate";
-import AddCustomIngredientForm from "./AddCustomIngredientForm";
+} from '@heroicons/react/16/solid';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import EditRecipeForm from './EditRecipeForm';
+import { NavLink } from 'react-router-dom';
+import RecipeRate from './RecipeRate';
+import AddCustomIngredientForm from './AddCustomIngredientForm';
 
 type RecipeType = {
   id: number;
@@ -47,9 +47,9 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   setRecipes,
 }) => {
   const [editRecipeForm, setEditRecipeForm] = useState(false);
-  const [addIngredientForm, setAddIngredientForm] = useState(false); 
+  const [addIngredientForm, setAddIngredientForm] = useState(false);
   const [currentRating, setCurrentRating] = useState(
-    rating ? Number(rating) : 0,
+    rating ? Number(rating) : 0
   );
 
   useEffect(() => {
@@ -57,27 +57,22 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   }, [rating]);
 
   const handleEatenMeal = () => {
-    const calories =
-      (ingredients || []).reduce(
-        (sum, ri) =>
-          sum +
-          ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) / 100,
-        0,
-      );
+    const calories = (ingredients || []).reduce(
+      (sum, ri) =>
+        sum + ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) / 100,
+      0
+    );
 
     const today = new Date().toISOString().slice(0, 10);
 
-    const stored = JSON.parse(
-      localStorage.getItem("dailyCalories") || "{}",
-    );
+    const stored = JSON.parse(localStorage.getItem('dailyCalories') || '{}');
 
     stored[today] = (stored[today] || 0) + calories;
 
-    localStorage.setItem("dailyCalories", JSON.stringify(stored));
+    localStorage.setItem('dailyCalories', JSON.stringify(stored));
 
     toast.success(`Meal added (+${calories.toFixed(0)} kcal)`);
   };
-
 
   return (
     <>
@@ -88,20 +83,20 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           </h1>
           <h2 className="text-xl text-text-muted ">{category}</h2>
           <h2 className="text-xl text-text-muted">
-            Current Average:{" "}
-            {currentRating !== undefined ? currentRating : "0.0"}
+            Current Average:{' '}
+            {currentRating !== undefined ? currentRating : '0.0'}
           </h2>
-          <h2 className="text-xl text-text-muted font-bold text-[#F5CB5C]">
-            Calories:{" "}
+          <h2 className="text-xl font-bold text-[#F5CB5C]">
+            Calories:{' '}
             {(ingredients || [])
               .reduce(
                 (sum, ri) =>
                   sum +
                   ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) /
-                  100,
-                0,
+                    100,
+                0
               )
-              .toFixed(1)}{" "}
+              .toFixed(1)}{' '}
             kcal
           </h2>
           <p className="text-text-muted">{description}</p>
@@ -161,7 +156,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
                     .delete(`http://localhost:8080/recipe/${id}`)
                     .then(() => {
                       setRecipes((prevRecipes) =>
-                        prevRecipes.filter((recipe) => recipe.id !== id),
+                        prevRecipes.filter((recipe) => recipe.id !== id)
                       );
                     })
                     .catch((err) => console.error(err)),
@@ -169,7 +164,7 @@ const RecipeCard: React.FC<RecipeCardType> = ({
                     loading: `Deleting ${name}...`,
                     success: `Successfully deleted ${name}`,
                     error: `An error occured while deleting ${name}`,
-                  },
+                  }
                 );
               }}
               className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-red-400 hover:shadow-[0_0_10px_rgba(255,100,103,0.2)] cursor-pointer duration-200 ease-in-out"
@@ -180,7 +175,6 @@ const RecipeCard: React.FC<RecipeCardType> = ({
         </div>
       </div>
 
-      {/* Render Edit Form */}
       {editRecipeForm && (
         <EditRecipeForm
           id={id}
@@ -188,8 +182,6 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           description={description}
           category={category}
           date_of_creation={date_of_creation}
-          taste={taste}
-          ingredients={ingredients}
           setRecipes={setRecipes}
           setEditRecipeForm={setEditRecipeForm}
         />

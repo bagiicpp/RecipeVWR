@@ -9,6 +9,8 @@ type RecipeType = {
   category: string;
   date_of_creation: string;
   rating: number;
+  taste: string;
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
 };
 
 function App() {

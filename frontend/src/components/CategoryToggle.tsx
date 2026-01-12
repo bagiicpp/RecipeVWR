@@ -12,7 +12,9 @@ type RecipeType = {
   description: string;
   category: string;
   date_of_creation: string;
-  rating: string;
+  rating: number;
+  taste: string;
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
 };
 
 const CategoryToggle: React.FC<HeaderType> = ({ setRecipes }) => {

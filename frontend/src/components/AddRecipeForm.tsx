@@ -1,7 +1,7 @@
-import { XCircleIcon } from "@heroicons/react/16/solid";
-import { useState } from "react";
-import axios from "axios";
-import { toast } from "sonner";
+import { XCircleIcon } from '@heroicons/react/16/solid';
+import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 type RecipeType = {
   id: number;
@@ -9,7 +9,9 @@ type RecipeType = {
   description: string;
   category: string;
   date_of_creation: string;
-  rating: string;
+  rating: number;
+  taste: string;
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
 };
 
 type AddRecipeFormType = {
@@ -31,10 +33,10 @@ const AddRecipeForm: React.FC<AddRecipeFormType> = ({
   setRecipes,
 }) => {
   const [formData, setFormData] = useState<formDataType>({
-    name: "",
-    description: "",
-    category: "Breakfast",
-    taste: "",
+    name: '',
+    description: '',
+    category: 'Breakfast',
+    taste: '',
   });
 
   return (
@@ -43,17 +45,17 @@ const AddRecipeForm: React.FC<AddRecipeFormType> = ({
         e.preventDefault();
         console.log(formData);
         if (!formData.name.trim()) {
-          toast.error("Recipe name is required");
+          toast.error('Recipe name is required');
           return;
         }
 
         if (!formData.category) {
-          toast.error("Recipe category is required");
+          toast.error('Recipe category is required');
           return;
         }
         toast.promise(
           axios
-            .post("http://localhost:8080/recipe/new", {
+            .post('http://localhost:8080/recipe/new', {
               name: formData.name,
               description: formData.description,
               category: formData.category,
@@ -64,20 +66,20 @@ const AddRecipeForm: React.FC<AddRecipeFormType> = ({
               setRecipes((prev) => [...prev, newRecipe]);
               setFormVisible(false);
               setFormData({
-                name: "",
-                description: "",
-                category: "Breakfast",
-                taste: "Select taste for recipe",
+                name: '',
+                description: '',
+                category: 'Breakfast',
+                taste: 'Select taste for recipe',
               });
             })
             .catch((err) => {
               console.error(err);
             }),
           {
-            loading: "Adding new recipe...",
-            success: "Successfully added new recipe",
-            error: "An error occured while adding recipe",
-          },
+            loading: 'Adding new recipe...',
+            success: 'Successfully added new recipe',
+            error: 'An error occured while adding recipe',
+          }
         );
       }}
       className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-blk-5 rounded-lg py-10 p-14 z-10 add-recipe-form space-y-6 flex flex-col"
@@ -147,7 +149,9 @@ const AddRecipeForm: React.FC<AddRecipeFormType> = ({
           }
           className="w-full bg-blk-10 border border-border px-3 py-2 rounded"
         >
-          <option value="Select taste for recipe">Select taste for recipe</option>
+          <option value="Select taste for recipe">
+            Select taste for recipe
+          </option>
           <option value="Italian">Italian</option>
           <option value="Vegetarian">Vegetarian</option>
           <option value="Chinese">Chinese</option>
