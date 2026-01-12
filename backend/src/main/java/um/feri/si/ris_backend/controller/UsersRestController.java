@@ -23,9 +23,11 @@ public class UsersRestController {
     @PostMapping("/login")
     public Users login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
+        String password = body.get("password"); // Extract password from request
 
         return usersService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .filter(user -> user.getPassword().equals(password))
+                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
     }
 
 

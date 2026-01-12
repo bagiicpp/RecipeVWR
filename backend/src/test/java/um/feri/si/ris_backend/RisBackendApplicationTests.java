@@ -50,6 +50,7 @@ class RisBackendApplicationTests {
 		recipe.setDescription("Test description");
 		recipe.setCategory("Breakfast");
 		recipe.setRating(5.0);
+		recipe.setTaste("Sweet");
 
 		recipe = recipeRepository.save(recipe);
 

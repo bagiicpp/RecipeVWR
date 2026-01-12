@@ -1,8 +1,8 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import RecipeCard from "./RecipeCard";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import RecipeCard from './RecipeCard';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 type RecipeType = {
   id: number;
@@ -12,7 +12,7 @@ type RecipeType = {
   date_of_creation: string;
   rating: number;
   taste: string;
-  ingredients?: { ingredient: { calories100g: number }; quantity: number }[]; 
+  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
 };
 
 type recipeDashType = {
@@ -20,42 +20,40 @@ type recipeDashType = {
   setRecipes: React.Dispatch<React.SetStateAction<RecipeType[]>>;
 };
 
-const [dailyCalories, setDailyCalories] = useState<number>(0);
-
-useEffect(() => {
-  const today = new Date().toISOString().slice(0, 10);
-  const stored = JSON.parse(
-    localStorage.getItem("dailyCalories") || "{}",
-  );
-
-  setDailyCalories(stored[today] || 0);
-}, []);
-
 const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
   const navigate = useNavigate();
 
+  const [dailyCalories, setDailyCalories] = useState<number>(0);
+
   useEffect(() => {
-    console.log("Fetching recipes...");
+    const today = new Date().toISOString().slice(0, 10);
+    const stored = JSON.parse(localStorage.getItem('dailyCalories') || '{}');
+
+    setDailyCalories(stored[today] || 0);
+  }, []);
+
+  useEffect(() => {
+    console.log('Fetching recipes...');
     axios
-      .get("http://localhost:8080/recipe/all")
+      .get('http://localhost:8080/recipe/all')
       .then((res) => {
         if (Array.isArray(res.data)) {
           setRecipes(res.data);
-          console.log("Recipes set:", res.data);
+          console.log('Recipes set:', res.data);
         } else {
-          console.error("Response is not an array:", res.data);
+          console.error('Response is not an array:', res.data);
           setRecipes([]);
         }
       })
       .catch((err) => {
-        console.error("Error fetching recipes:", err);
-        console.error("Error details:", err.response?.data);
+        console.error('Error fetching recipes:', err);
+        console.error('Error details:', err.response?.data);
         setRecipes([]);
       });
   }, [setRecipes]);
 
   useEffect(() => {
-    const taste = localStorage.getItem("taste");
+    const taste = localStorage.getItem('taste');
     if (!taste || recipes.length === 0) return;
 
     const filtered = recipes.filter((r) => r.taste === taste);
@@ -65,7 +63,7 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
 
     toast(`Recommended for you: ${randomRecipe.name}`, {
       action: {
-        label: "View Recipe",
+        label: 'View Recipe',
         onClick: () => navigate(`/recipe/${randomRecipe.id}`),
       },
     });
@@ -94,13 +92,12 @@ const RecipeDash: React.FC<recipeDashType> = ({ setRecipes, recipes }) => {
           ))
         )}
       </div>
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-blk-5 border border-border px-8 py-4 rounded-xl shadow-lg text-center z-50">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-blk-5 border border-border px-8 py-4 rounded-xl shadow-lg text-center z-50">
         <p className="text-sm text-text-muted">Today's intake</p>
         <p className="text-3xl font-bold text-[#F5CB5C]">
           {dailyCalories.toFixed(0)} kcal
         </p>
       </div>
-
     </div>
   );
 };
