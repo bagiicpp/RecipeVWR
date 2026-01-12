@@ -9,11 +9,9 @@ on:
       - main
 
 jobs:
-
   build_backend:
     name: Build backend
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,38 +31,37 @@ jobs:
     name: Build frontend
     runs-on: ubuntu-latest
     needs: build_backend
-  
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-  
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
-  
+
       - name: Install frontend dependencies
         run: npm install
         working-directory: frontend
-  
+
       - name: Build frontend
         run: npm run build
         working-directory: frontend
 
-    test_backend:
-      name: Run backend tests
-      runs-on: ubuntu-latest
-      needs: build_frontend
-
+  test_backend:
+    name: Run backend tests
+    runs-on: ubuntu-latest
+    needs: build_frontend
+    
     services:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_DB: jdbc:postgresql://localhost:5432/risRecepti
+          POSTGRES_DB: risRecepti
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: B@to2005!Jovana
+          POSTGRES_PASSWORD: "B@to2005!Jovana"
         ports:
-		■  5432:5432
+          - 5432:5432
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
@@ -72,20 +69,20 @@ jobs:
           --health-retries=5
 
     steps:
-	○  name: Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-	○  name: Setup Java
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
-          java-version: '20'
+          distribution: 'temurin'
+          java-version: '21'
           cache: maven
 
-	○  name: Run backend tests
+      - name: Run backend tests
         run: mvn test
         working-directory: backend
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/risRecepti
           SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
+          SPRING_DATASOURCE_PASSWORD: "B@to2005!Jovana"
