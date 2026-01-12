@@ -1,6 +1,6 @@
-import { useState } from "react";
-import axios from "axios";
-import { toast } from "sonner";
+import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 type formDataType = {
   name: string;
@@ -13,44 +13,44 @@ type formDataType = {
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState<formDataType>({
-    name: "",
-    surname: "",
-    username: "",
-    email: "",
-    password: "",
-    taste: ""
+    name: '',
+    surname: '',
+    username: '',
+    email: '',
+    password: '',
+    taste: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name.trim()) return toast.error("Name is required");
-    if (!formData.surname.trim()) return toast.error("Surname is required");
-    if (!formData.username.trim()) return toast.error("Username is required");
-    if (!formData.email.trim()) return toast.error("Email is required");
-    if (!formData.password.trim()) return toast.error("Password is required");
+    if (!formData.name.trim()) return toast.error('Name is required');
+    if (!formData.surname.trim()) return toast.error('Surname is required');
+    if (!formData.username.trim()) return toast.error('Username is required');
+    if (!formData.email.trim()) return toast.error('Email is required');
+    if (!formData.password.trim()) return toast.error('Password is required');
 
     toast.promise(
       axios
-        .post("http://localhost:8080/users/new", formData)
-        .then((res) => {
+        .post('http://localhost:8080/users/new', formData)
+        .then(() => {
           setFormData({
-            name: "",
-            surname: "",
-            username: "",
-            email: "",
-            password: "",
-            taste: ""
+            name: '',
+            surname: '',
+            username: '',
+            email: '',
+            password: '',
+            taste: '',
           });
         })
         .catch((err) => {
           console.error(err);
-          toast.error("An error occurred while registering");
+          toast.error('An error occurred while registering');
         }),
       {
-        loading: "Registering...",
-        success: "Successfully registered!",
-        error: "An error occurred",
+        loading: 'Registering...',
+        success: 'Successfully registered!',
+        error: 'An error occurred',
       }
     );
   };
