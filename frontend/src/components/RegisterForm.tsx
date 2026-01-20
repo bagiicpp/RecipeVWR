@@ -1,8 +1,8 @@
-import { useState } from "react";
-import axios from "axios";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
 type formDataType = {
   name: string;
@@ -11,34 +11,41 @@ type formDataType = {
   email: string;
   password: string;
   taste: string;
-  dailyCalorieLimit: number | "";
+  dailyCalorieLimit: number | '';
 };
 
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<formDataType>({
-    name: "",
-    surname: "",
-    username: "",
-    email: "",
-    password: "",
-    taste: "",
-    dailyCalorieLimit: "",
+    name: '',
+    surname: '',
+    username: '',
+    email: '',
+    password: '',
+    taste: '',
+    dailyCalorieLimit: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const requiredFields: (keyof formDataType)[] = [
-      "name",
-      "surname",
-      "username",
-      "email",
-      "password",
-      "taste",
+      'name',
+      'surname',
+      'username',
+      'email',
+      'password',
+      'taste',
     ];
     for (const field of requiredFields) {
-      if (!formData[field].trim()) {
+      const value = formData[field];
+
+      if (
+        value === null ||
+        value === undefined ||
+        (typeof value === 'string' && !value.trim()) ||
+        (typeof value === 'number' && Number.isNaN(value))
+      ) {
         return toast.error(
           `${field.charAt(0).toUpperCase() + field.slice(1)} is required`,
         );
@@ -46,24 +53,24 @@ const RegisterForm = () => {
     }
 
     const registerPromise = axios
-      .post("http://localhost:8080/users/new", formData)
+      .post('http://localhost:8080/users/new', formData)
       .then(() => {
         setFormData({
-          name: "",
-          surname: "",
-          username: "",
-          email: "",
-          password: "",
-          taste: "",
-          dailyCalorieLimit: "",
+          name: '',
+          surname: '',
+          username: '',
+          email: '',
+          password: '',
+          taste: '',
+          dailyCalorieLimit: '',
         });
-        setTimeout(() => navigate("/login"), 1500);
+        setTimeout(() => navigate('/login'), 1500);
       });
 
     toast.promise(registerPromise, {
-      loading: "Creating your account...",
-      success: "Successfully registered! Redirecting...",
-      error: "An error occurred during registration",
+      loading: 'Creating your account...',
+      success: 'Successfully registered! Redirecting...',
+      error: 'An error occurred during registration',
     });
   };
 
@@ -75,7 +82,7 @@ const RegisterForm = () => {
       >
         <button
           type="button"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
           className="absolute top-6 left-6 flex items-center text-sm text-text-muted hover:text-[#F5CB5C] transition-colors group"
         >
           <ChevronLeftIcon className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
@@ -183,7 +190,7 @@ const RegisterForm = () => {
               <option value="" disabled>
                 Select your preference
               </option>
-              {["Italian", "Vegetarian", "Chinese", "Sweet", "Healthy"].map(
+              {['Italian', 'Vegetarian', 'Chinese', 'Sweet', 'Healthy'].map(
                 (t) => (
                   <option key={t} value={t}>
                     {t}
@@ -221,10 +228,10 @@ const RegisterForm = () => {
         </button>
 
         <p className="text-center text-sm text-text-muted">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <button
             type="button"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate('/login')}
             className="text-[#F5CB5C] font-semibold hover:underline"
           >
             Log in
