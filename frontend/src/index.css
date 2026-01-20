@@ -16,3 +16,18 @@ body {
   --color-text-muted: hsl(0 0% 70%);
   --color-border: hsl(0 0% 30%);
 }
+
+.input {
+  @apply w-full px-4 py-3 rounded-2xl
+  bg-blk-10 border border-border/70
+  text-text-base
+  focus:ring-2 focus:ring-[#F5CB5C]/25
+  focus:border-[#F5CB5C]
+  outline-none transition-all;
+}
+
+.label {
+  @apply text-xs font-semibold uppercase
+  tracking-widest text-text-muted ml-1;
+}
+

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import Header from './components/Header';
-import RecipeDash from './components/RecipeDash';
+import { useState } from "react";
+import Header from "./components/Header";
+import RecipeDash from "./components/RecipeDash";
 
 type RecipeType = {
   id: number;
@@ -10,7 +10,25 @@ type RecipeType = {
   date_of_creation: string;
   rating: number;
   taste: string;
-  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
+  totalCalories?: number;
+  ingredients?: RecipeIngredient[];
+};
+type NumericValue = {
+  source: string;
+  parsedValue: number;
+};
+
+type Ingredient = {
+  id: number;
+  name: string;
+  calories100g: number | NumericValue;
+  protein100g?: number | NumericValue;
+  fat100g?: number | NumericValue;
+};
+
+type RecipeIngredient = {
+  ingredient: Ingredient;
+  quantity: number | NumericValue;
 };
 
 function App() {

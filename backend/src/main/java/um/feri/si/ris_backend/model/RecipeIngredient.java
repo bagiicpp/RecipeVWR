@@ -1,5 +1,6 @@
 package um.feri.si.ris_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,10 +16,11 @@ public class RecipeIngredient {
     @ManyToOne
     @MapsId("recipeId")
     @JoinColumn(name = "recipe_id")
-    @JsonIgnoreProperties("ingredients")
+    @JsonIgnore
     private Recipe recipe;
 
-    @ManyToOne
+    // FIX IS HERE: Add cascade = CascadeType.ALL
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("ingredientId")
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;

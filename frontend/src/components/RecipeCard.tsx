@@ -3,14 +3,33 @@ import {
   PencilIcon,
   EyeIcon,
   PlusIcon,
-} from '@heroicons/react/16/solid';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
-import EditRecipeForm from './EditRecipeForm';
-import { NavLink } from 'react-router-dom';
-import RecipeRate from './RecipeRate';
-import AddCustomIngredientForm from './AddCustomIngredientForm';
+  FireIcon,
+} from "@heroicons/react/16/solid";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import EditRecipeForm from "./EditRecipeForm";
+import { NavLink } from "react-router-dom";
+import RecipeRate from "./RecipeRate";
+import AddCustomIngredientForm from "./AddCustomIngredientForm";
+
+type NumericValue = {
+  source: string;
+  parsedValue: number;
+};
+
+type Ingredient = {
+  id: number;
+  name: string;
+  calories100g: number | NumericValue;
+  protein100g?: number | NumericValue;
+  fat100g?: number | NumericValue;
+};
+
+type RecipeIngredient = {
+  ingredient: Ingredient;
+  quantity: number | NumericValue;
+};
 
 type RecipeType = {
   id: number;
@@ -20,22 +39,21 @@ type RecipeType = {
   date_of_creation: string;
   rating: number;
   taste: string;
-  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
+  totalCalories?: number;
+  total_calories?: number;
+  ingredients?: RecipeIngredient[];
+  creator?: {
+    id: number;
+    username: string;
+  };
 };
 
-type RecipeCardType = {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  date_of_creation: string;
-  rating: number;
-  taste: string;
-  ingredients?: { ingredient: { calories100g: number }; quantity: number }[];
+type RecipeCardProps = RecipeType & {
   setRecipes: React.Dispatch<React.SetStateAction<RecipeType[]>>;
+  setDailyCalories: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const RecipeCard: React.FC<RecipeCardType> = ({
+const RecipeCard: React.FC<RecipeCardProps> = ({
   id,
   name,
   description,
@@ -44,135 +62,174 @@ const RecipeCard: React.FC<RecipeCardType> = ({
   rating,
   taste,
   ingredients,
+  totalCalories,
+  creator,
   setRecipes,
+  setDailyCalories,
 }) => {
   const [editRecipeForm, setEditRecipeForm] = useState(false);
   const [addIngredientForm, setAddIngredientForm] = useState(false);
-  const [currentRating, setCurrentRating] = useState(
-    rating ? Number(rating) : 0
-  );
+  const [currentRating, setCurrentRating] = useState(rating || 0);
+
+  const currentUsername = localStorage.getItem("username");
 
   useEffect(() => {
     setCurrentRating(rating);
   }, [rating]);
 
-  const handleEatenMeal = () => {
-    const calories = (ingredients || []).reduce(
-      (sum, ri) =>
-        sum + ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) / 100,
-      0
-    );
-
-    const today = new Date().toISOString().slice(0, 10);
-
-    const stored = JSON.parse(localStorage.getItem('dailyCalories') || '{}');
-
-    stored[today] = (stored[today] || 0) + calories;
-
-    localStorage.setItem('dailyCalories', JSON.stringify(stored));
-
-    toast.success(`Meal added (+${calories.toFixed(0)} kcal)`);
+  const getValue = (val: any): number => {
+    if (val === null || val === undefined) return 0;
+    if (typeof val === "number") return val;
+    if (typeof val === "string") return parseFloat(val) || 0;
+    if (typeof val === "object" && "parsedValue" in val) return val.parsedValue;
+    return 0;
   };
+
+  const backendCalories = getValue(totalCalories);
+
+  const calories =
+    backendCalories > 0
+      ? backendCalories
+      : (ingredients || []).reduce((sum, ri) => {
+        const kcalPer100 = getValue(ri.ingredient?.calories100g);
+        const weight = getValue(ri.quantity);
+        return sum + (kcalPer100 * weight) / 100;
+      }, 0);
+
+  const handleEatenMeal = () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const stored = JSON.parse(localStorage.getItem("dailyCalories") || "{}");
+    stored[today] = (stored[today] || 0) + calories;
+    localStorage.setItem("dailyCalories", JSON.stringify(stored));
+
+    setDailyCalories(stored[today]);
+
+    toast.success(`Tracked: +${calories.toFixed(0)} kcal for today`);
+  };
+
+  const handleDelete = () => {
+    const currentUserId = Number(localStorage.getItem("userId"));
+
+    toast.promise(
+      axios
+        .delete(`http://localhost:8080/recipe/${id}`, {
+          params: { userId: currentUserId },
+        })
+        .then(() => {
+          setRecipes((prev) => prev.filter((r) => r.id !== id));
+        }),
+      {
+        loading: `Deleting ${name}...`,
+        success: `Deleted ${name}`,
+        error: `Could not delete ${name}`,
+      },
+    );
+  };
+
+  const handleEdit = () => setEditRecipeForm(true);
 
   return (
     <>
-      <div className="rounded-md p-4 bg-blk-5 border border-border flex flex-col space-y-4 justify-between hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] shadow duration-200 ease-in-out relative">
-        <div className="flex flex-col">
-          <h1 className="text-2xl text-text-base font-bold text-center mb-4">
+      <div className="group relative bg-black/5 border border-white/10 rounded-3xl p-6 flex flex-col justify-between transition-all duration-300 hover:border-[#F5CB5C]/30 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] overflow-hidden">
+        <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#F5CB5C]/5 rounded-full blur-3xl group-hover:bg-[#F5CB5C]/10 transition-colors" />
+
+        <div className="relative z-10">
+          <div className="flex justify-between items-start mb-4">
+            <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-widest text-[#F5CB5C] font-bold">
+              {category}
+            </span>
+            <div className="flex items-center text-[#F5CB5C] bg-[#F5CB5C]/10 px-2 py-1 rounded-lg">
+              <FireIcon className="w-4 h-4 mr-1" />
+              <span className="text-xs font-bold">
+                {calories.toFixed(0)} kcal
+              </span>
+            </div>
+          </div>
+
+          <h1 className="text-2xl font-black text-white leading-tight mb-2 group-hover:text-[#F5CB5C] transition-colors">
             {name}
           </h1>
-          <h2 className="text-xl text-text-muted ">{category}</h2>
-          <h2 className="text-xl text-text-muted">
-            Current Average:{' '}
-            {currentRating !== undefined ? currentRating : '0.0'}
-          </h2>
-          <h2 className="text-xl font-bold text-[#F5CB5C]">
-            Calories:{' '}
-            {(ingredients || [])
-              .reduce(
-                (sum, ri) =>
-                  sum +
-                  ((ri.ingredient?.calories100g || 0) * (ri.quantity || 0)) /
-                    100,
-                0
-              )
-              .toFixed(1)}{' '}
-            kcal
-          </h2>
-          <p className="text-text-muted">{description}</p>
-          <p className="text-text-muted">{taste}</p>
-        </div>
-
-        <RecipeRate
-          id={id}
-          name={name}
-          setCurrentRating={setCurrentRating}
-          setRecipes={setRecipes}
-        />
-
-        <div className="flex justify-between items-center space-x-3 pt-2 border-t border-blk-10">
-          <p className="text-sm text-text-muted">{date_of_creation}</p>
-
-          <div className="flex space-x-2">
-            <div
-              title="Mark as eaten"
-              onClick={handleEatenMeal}
-              className="px-3 h-8 bg-green-600 text-black flex items-center justify-center 
-                        rounded font-bold hover:bg-green-500 cursor-pointer transition"
-            >
-              Ate
-            </div>
-
-            <div
-              title="Add Ingredient"
-              onClick={() => setAddIngredientForm(true)}
-              className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-green-400 hover:shadow-[0_0_10px_rgba(74,222,128,0.2)] shadow cursor-pointer duration-200 ease-in-out"
-            >
-              <PlusIcon className="w-5" />
-            </div>
-
-            <NavLink to={`/recipe/${id}`}>
-              <div
-                title="View Details"
-                className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-[#F5CB5C] hover:shadow-[0_0_10px_rgba(245,203,92,0.2)] shadow cursor-pointer duration-200 ease-in-out"
-              >
-                <EyeIcon className="w-5" />
-              </div>
-            </NavLink>
-
-            <div
-              title="Edit Recipe"
-              onClick={() => setEditRecipeForm(!editRecipeForm)}
-              className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-[#F5CB5C] hover:shadow-[0_0_10px_rgba(245,203,92,0.2)] shadow cursor-pointer duration-200 ease-in-out"
-            >
-              <PencilIcon className="w-5" />
-            </div>
-
-            <div
-              title="Delete Recipe"
-              onClick={() => {
-                toast.promise(
-                  axios
-                    .delete(`http://localhost:8080/recipe/${id}`)
-                    .then(() => {
-                      setRecipes((prevRecipes) =>
-                        prevRecipes.filter((recipe) => recipe.id !== id)
-                      );
-                    })
-                    .catch((err) => console.error(err)),
-                  {
-                    loading: `Deleting ${name}...`,
-                    success: `Successfully deleted ${name}`,
-                    error: `An error occured while deleting ${name}`,
-                  }
-                );
-              }}
-              className="w-8 h-8 bg-blk-10 flex items-center justify-center border border-border rounded hover:text-red-400 hover:shadow-[0_0_10px_rgba(255,100,103,0.2)] cursor-pointer duration-200 ease-in-out"
-            >
-              <TrashIcon className="w-5" />
+          <p className="text-sm text-gray-400 line-clamp-2 mb-2 italic">
+            "{description}"
+          </p>
+          <p className="text-xs text-gray-400 mb-2">
+            Creator: {creator?.username || "Unknown"}
+          </p>
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-medium text-gray-400 bg-white/5 px-2 py-1 rounded-md">
+              #{taste}
+            </span>
+            <div className="text-right text-[10px] uppercase text-gray-400 font-bold tracking-tighter">
+              Avg Rating:{" "}
+              <span className="text-white text-xs">
+                {currentRating || "0.0"}
+              </span>
             </div>
           </div>
         </div>
+
+        <div className="relative z-10 space-y-4">
+          <RecipeRate
+            id={id}
+            name={name}
+            setCurrentRating={setCurrentRating}
+            setRecipes={setRecipes}
+          />
+
+          <div className="flex items-center gap-2 pt-4 border-t border-white/10">
+            <button
+              onClick={handleEatenMeal}
+              className="flex-1 bg-green-500 hover:bg-green-400 text-black text-xs font-black py-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center uppercase tracking-wider"
+            >
+              I Ate This
+            </button>
+
+            <div className="flex gap-1.5">
+              <NavLink
+                to={`/recipe/${id}`}
+                className="p-2.5 bg-white/5 border border-white/10 hover:border-[#F5CB5C] text-gray-400 hover:text-[#F5CB5C] rounded-xl transition-all"
+                title="View"
+              >
+                <EyeIcon className="w-4 h-4" />
+              </NavLink>
+
+              {/* Only show Edit/Delete if it's your recipe */}
+              {creator?.username === currentUsername && (
+                <>
+                  <button
+                    onClick={handleEdit}
+                    className="p-2.5 bg-white/5 border border-white/10 hover:border-[#F5CB5C] text-gray-400 hover:text-[#F5CB5C] rounded-xl transition-all"
+                    title="Edit"
+                  >
+                    <PencilIcon className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    onClick={handleDelete}
+                    className="p-2.5 bg-white/5 border border-white/10 hover:border-red-500/50 text-gray-400 hover:text-red-400 rounded-xl transition-all"
+                    title="Delete"
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+
+          <p className="text-[10px] text-center text-gray-500 pt-1 uppercase tracking-widest font-bold">
+            Created: {date_of_creation}
+          </p>
+        </div>
+
+        {creator?.username === currentUsername && (
+          <button
+            onClick={() => setAddIngredientForm(true)}
+            className="absolute -right-2 -bottom-2 w-12 h-12 bg-white/5 border border-white/10 rounded-tl-3xl flex items-center justify-center text-gray-400 hover:text-green-400 transition-colors group-hover:border-[#F5CB5C]/50"
+            title="Add Ingredient"
+          >
+            <PlusIcon className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {editRecipeForm && (
@@ -184,10 +241,11 @@ const RecipeCard: React.FC<RecipeCardType> = ({
           date_of_creation={date_of_creation}
           setRecipes={setRecipes}
           setEditRecipeForm={setEditRecipeForm}
+          totalCalories={totalCalories || 0}
+          taste={taste}
         />
       )}
 
-      {/* Render Add Ingredient Form */}
       {addIngredientForm && (
         <AddCustomIngredientForm
           recipeId={id}

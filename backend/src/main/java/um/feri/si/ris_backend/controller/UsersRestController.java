@@ -66,10 +66,13 @@ public class UsersRestController {
                     user.setSurname(userData.getSurname());
                     user.setEmail(userData.getEmail());
                     user.setPassword(userData.getPassword());
+                    user.setTaste(userData.getTaste());
+                    user.setDailyCalorieLimit(userData.getDailyCalorieLimit());
                     return ResponseEntity.ok(usersService.saveUser(user));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -79,4 +82,12 @@ public class UsersRestController {
         usersService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<Users> getByUsername(@PathVariable String username) {
+        return usersService.findByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }
